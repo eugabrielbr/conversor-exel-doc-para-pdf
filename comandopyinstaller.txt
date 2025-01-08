@@ -1,0 +1,1 @@
+pyinstaller --distpath "D:\vscode\projetoconversor\app" --workpath "D:\vscode\projetoconversor\built" --onefile --noconsole --icon=pdfico.ico --add-data "pdf.png;pdf.png" conversorpdf.py

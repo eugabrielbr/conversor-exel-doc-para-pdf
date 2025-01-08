@@ -1,0 +1,1 @@
+Este projeto tem o foco somente na aprendizagem dos seguintes conceitos: interface gráfica em python usando ttkbootstrap e empacotamento de aplicativos
