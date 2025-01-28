@@ -8,6 +8,8 @@ import sys
 from openpyxl import load_workbook
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+import threading
+from time import sleep 
 
 class Aplication: 
     
@@ -15,6 +17,9 @@ class Aplication:
         
         self.widget1 = ttk.Frame(master)
         self.widget1.pack(fill=BOTH, expand=True, padx=10, pady=10)
+        
+        self.lock = True
+        self.thread = None
         
         self.msg = ttk.Label(self.widget1, text="Escolha o arquivo", font=("Arial", 11, "bold"))
         self.msg.pack(pady=10)
@@ -28,36 +33,41 @@ class Aplication:
         self.msgArquivo = ttk.Label(self.widget1, text="", font=("Arial", 8, "bold"))
         self.msgArquivo.pack(pady=5)
         
-        self.converter_pdf = ttk.Button(self.widget1, text="Converter PDF", bootstyle=(INFO, OUTLINE), command=self.converterArquivoPdf)
+        self.converter_pdf = ttk.Button(self.widget1, text="Converter Word", bootstyle=(INFO, OUTLINE), command=self.converterArquivoPdf,padding = (6,6))
         self.converter_pdf.pack(pady=40)
         
-        self.converter_xlsx = ttk.Button(self.widget1, text="Converter Exel", bootstyle=(SUCCESS, OUTLINE), command = self.converterArquivoExel)
+        self.converter_xlsx = ttk.Button(self.widget1, text="Converter Exel", bootstyle=(SUCCESS, OUTLINE), command = self.converterArquivoExel,padding = (9,6))
         self.converter_xlsx.pack(pady=5)
         
   
         self.aviso = ttk.Label(self.widget1, text="", font=("Arial", 11, "bold"))
         self.aviso.pack(pady=10)
         
-        #colocar imagem ta dando problema na hora de rodar o executavel 
+        #colocar imagem ta dando problema na hora de rodar o executavel (permission danied)
         '''
         caminho_da_imagem = resource_path("pdf.png")
         
         self.imagemG = PhotoImage(file=caminho_da_imagem) 
         self.imagem = self.imagemG.subsample(4, 4)
         self.image_label = ttk.Label(self.widget1, image=self.imagem)
-        self.image_label.place(x=300, y=190) 
+        self.image_label.place(x=300, y=190)
         '''
+    
+    
     def doc_para_pdf(self, docx_path, pdf_path):
         
         pdf_path_nome = nome_exel(docx_path)
         
+        
         try: 
+                 
             convert(docx_path, pdf_path)
             print(f'Arquivo convertido para PDF: {pdf_path}')
             self.aviso.config(text="Arquivo convertido!", foreground="green")
             self.caminhoArquivo = None
             self.caminhoResultado = None
             self.msgArquivo["text"] = ""
+            
         except Exception as e:
             print(e)
             self.aviso.config(text=f"Erro ao converter o arquivo {pdf_path_nome}", foreground="red")
@@ -147,7 +157,7 @@ class Aplication:
         if caminho_resultado:
             self.caminhoResultado = caminho_resultado
             self.exel_para_pdf(self.caminhoArquivo,self.caminhoResultado)
-
+            
 
 def nome_exel(caminho):
         
@@ -169,6 +179,8 @@ def resource_path(relative_path):
     return os.path.join(os.path.abspath("."), relative_path)
 
 # Use resource_path para carregar o arquivo
+
+
 
 
 root = Window(themename="darkly")
